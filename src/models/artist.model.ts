@@ -21,4 +21,9 @@ export const ArtistSchema = new Schema({
         type: String,
         enum: Object.values(ArtistGenre)
     }
+}, {
+    timestamps: {
+        createdAt: "createDate",
+        updatedAt: undefined // updatedAt will not be stored as part of the timestamp
+    }
 })

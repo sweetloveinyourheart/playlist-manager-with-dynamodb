@@ -26,4 +26,9 @@ export const UserSchema = new Schema({
         type: String,
         enum: Object.values(Gender)
     }
+}, {
+    timestamps: {
+        createdAt: "createDate",
+        updatedAt: undefined // updatedAt will not be stored as part of the timestamp
+    }
 })

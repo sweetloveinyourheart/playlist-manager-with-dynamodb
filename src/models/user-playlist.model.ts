@@ -22,7 +22,11 @@ export const UserPlaylistSchema = new Schema({
         default: []
     },
     playlist_name: {
-        type: String,
-        default: ""
+        type: String
+    }
+}, {
+    timestamps: {
+        createdAt: "createDate",
+        updatedAt: undefined // updatedAt will not be stored as part of the timestamp
     }
 })
