@@ -1,9 +1,20 @@
-import { Schema } from "dynamoose";
+import dynamoose, { Schema } from "dynamoose";
+import { Item } from "dynamoose/dist/Item";
 
-enum Gender {
+export enum Gender {
     Male = "male",
     Female = "female",
     Other = "other"
+}
+
+export class User extends Item {
+    user_id!: string
+    first_name!: string
+    last_name!: string
+    address?: string
+    gender?: Gender
+    created_at!: Date
+    updated_at!: Date 
 }
 
 export const UserSchema = new Schema({
@@ -28,7 +39,10 @@ export const UserSchema = new Schema({
     }
 }, {
     timestamps: {
-        createdAt: "createDate",
-        updatedAt: undefined // updatedAt will not be stored as part of the timestamp
+        createdAt: "created_at",
+        updatedAt: "updated_at"
     }
 })
+
+const UserModel = dynamoose.model<User>("user", UserSchema)
+export default UserModel

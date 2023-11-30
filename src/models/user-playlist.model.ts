@@ -1,6 +1,14 @@
-import { Schema } from "dynamoose";
-import { UserSchema } from "./user.model";
-import { MusicTrackSchema } from "./music-track.model";
+import dynamoose, { Schema } from "dynamoose";
+import { User, UserSchema } from "./user.model";
+import { MusicTrack, MusicTrackSchema } from "./music-track.model";
+import { Item } from "dynamoose/dist/Item";
+
+export class UserPlaylist extends Item {
+    playlist_id!: string
+    user!: User
+    tracks!: MusicTrack
+    playlist_name!: string
+}
 
 export const UserPlaylistSchema = new Schema({
     playlist_id: {
@@ -13,9 +21,9 @@ export const UserPlaylistSchema = new Schema({
         rangeKey: true,
         required: true
     },
-    track_ids: {
+    tracks: {
         type: Array,
-        schema: [{ 
+        schema: [{
             type: Set,
             schema: [MusicTrackSchema]
         }],
@@ -26,7 +34,10 @@ export const UserPlaylistSchema = new Schema({
     }
 }, {
     timestamps: {
-        createdAt: "createDate",
-        updatedAt: undefined // updatedAt will not be stored as part of the timestamp
+        createdAt: "created_at",
+        updatedAt: "updated_at"
     }
 })
+
+const UserPlaylistModel = dynamoose.model<UserPlaylist>('user-playlist', UserPlaylistSchema)
+export default UserPlaylist

@@ -1,5 +1,16 @@
 import dynamoose, { Schema } from 'dynamoose'
-import { ArtistSchema } from './artist.model'
+import { Artist, ArtistSchema } from './artist.model'
+import { Item } from 'dynamoose/dist/Item'
+
+export class MusicTrack extends Item {
+    track_id!: string
+    track_title!: string
+    artist!: Artist
+    genre!: PlaylistGenre
+    release_date!: Date
+    duration?: number
+    url?: string
+}
 
 enum PlaylistGenre {
     Pop = "pop",
@@ -39,8 +50,10 @@ export const MusicTrackSchema = new Schema({
     }
 }, {
     timestamps: {
-        createdAt: "createDate",
-        updatedAt: undefined // updatedAt will not be stored as part of the timestamp
+        createdAt: "created_at",
+        updatedAt: "updated_at"
     }
 }) 
 
+const MusicTrackModel = dynamoose.model<MusicTrack>('music-track', MusicTrackSchema)
+export default MusicTrackModel

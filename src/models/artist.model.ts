@@ -1,4 +1,14 @@
-import { Schema } from "dynamoose";
+import dynamoose, { Schema } from "dynamoose";
+import { Item } from "dynamoose/dist/Item";
+
+export class Artist extends Item {
+    artist_id!: string
+    artist_name!: string
+    country?: string
+    genre?: string
+    created_at!: Date
+    updated_at!: Date
+}
 
 enum ArtistGenre {
     Pop = "pop",
@@ -23,7 +33,10 @@ export const ArtistSchema = new Schema({
     }
 }, {
     timestamps: {
-        createdAt: "createDate",
-        updatedAt: undefined // updatedAt will not be stored as part of the timestamp
+        createdAt: "created_at",
+        updatedAt: "updated_at"
     }
 })
+
+const ArtistModel = dynamoose.model<Artist>("artist", ArtistSchema)
+export default ArtistModel

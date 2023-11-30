@@ -1,18 +1,21 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import * as bodyParser from 'body-parser'
 import { initDynamodbConnection } from './database/connection';
+import routes from './routes';
 
 const app = express();
 
 // init dynamodb connection
 initDynamodbConnection()
 
+// middlewares
+app.use(bodyParser.json())
+
 // routes
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, TypeScript Express!');
-  });
+app.use('/api/v1', routes)
 
 // listen
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 9000;
 app.listen(port, () => {
-    console.log("🚀 Server launch on port", port)
+  console.log("🚀 Server launch on port", port)
 })
