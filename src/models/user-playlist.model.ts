@@ -1,6 +1,6 @@
 import dynamoose, { Schema } from "dynamoose";
-import { User, UserSchema } from "./user.model";
-import { MusicTrack, MusicTrackSchema } from "./music-track.model";
+import UserModel, { User, UserSchema } from "./user.model";
+import MusicTrackModel, { MusicTrack, MusicTrackSchema } from "./music-track.model";
 import { Item } from "dynamoose/dist/Item";
 
 export class UserPlaylist extends Item {
@@ -16,8 +16,8 @@ export const UserPlaylistSchema = new Schema({
         hashKey: true
     },
     user: {
-        type: Set,
-        schema: [UserSchema],
+        type: UserModel,
+        schema: UserModel,
         rangeKey: true,
         required: true
     },
@@ -25,7 +25,7 @@ export const UserPlaylistSchema = new Schema({
         type: Array,
         schema: [{
             type: Set,
-            schema: [MusicTrackSchema]
+            schema: [MusicTrackModel]
         }],
         default: []
     },

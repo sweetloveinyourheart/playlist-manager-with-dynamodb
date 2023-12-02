@@ -1,6 +1,6 @@
 import dynamoose, { Schema } from "dynamoose";
 import { Item } from "dynamoose/dist/Item";
-import { User, UserSchema } from "./user.model";
+import UserModel, { User } from "./user.model";
 
 export class Account extends Item {
     username!: string
@@ -21,8 +21,8 @@ export const AccountSchema = new Schema({
         required: true
     },
     user: {
-        type: Set,
-        schema: [UserSchema],
+        type: UserModel,
+        schema: UserModel,
         required: true
     }
 }, {

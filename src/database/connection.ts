@@ -1,14 +1,13 @@
-import dynamoose from 'dynamoose'
+import dynamoose from 'dynamoose';
 
 /**
- * Initializes a connection to Amazon DynamoDB using the Dynamoose library.
- * This function configures Dynamoose to use the local DynamoDB instance.
- * If an error occurs during the initialization, it logs the error message.
+ * Initializes a connection to Amazon DynamoDB using Dynamoose, configuring it to use a local DynamoDB instance.
  *
  * @function
  * @name initDynamodbConnection
- * @throws {Error} If there is an error during the DynamoDB connection initialization.
- * @returns {void}
+ * @param {boolean} [logger=false] - A flag indicating whether to enable logging (default is false).
+ * @throws {Error} Throws an error if there is an issue during DynamoDB connection initialization.
+ * @returns {Promise<void>}
  *
  * @example
  * // Import the function
@@ -17,13 +16,29 @@ import dynamoose from 'dynamoose'
  * // Initialize DynamoDB connection
  * initDynamodbConnection();
  */
-export const initDynamodbConnection = (): void => {
+export const initDynamodbConnection = async (logger: boolean = false): Promise<void> => {
     try {
-        // Configures Dynamoose to use the local DynamoDB instance
-        dynamoose.aws.ddb.local();
-        console.log("[*] Dynamodb connected !");
+        // Configure Dynamoose to use the local DynamoDB instance
+        const ddb = new dynamoose.aws.ddb.DynamoDB({
+            region: 'us-east-1',
+            credentials: {
+                accessKeyId: 'local',
+                secretAccessKey: 'local'
+            },
+            endpoint: 'http://localhost:8000'
+        });
+
+        // Set the DynamoDB instance for Dynamoose
+        dynamoose.aws.ddb.set(ddb);
+
+        // Set the DynamoDB logger if specified
+        if (logger) {
+            (await dynamoose.logger()).providers.set(console);
+        }
+
+        console.log('[*] DynamoDB connected!');
     } catch (error) {
-        // Logs an error message if the initialization fails
-        console.log("[!] InitDynamodbConnection failed, error:", error);
+        // Log an error message if initialization fails
+        console.log('[!] initDynamodbConnection failed, error:', error);
     }
 };

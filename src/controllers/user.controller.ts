@@ -9,10 +9,14 @@ export default class UserController {
 
     @ValidateBody(CreateNewUserDTO)
     async register(request: Request, response: Response, next: NextFunction) {
-        const newUserData: CreateNewUserDTO = request.body
-        await userService.createUser(newUserData)
+        try {
+            const newUserData: CreateNewUserDTO = request.body
+            const result = await userService.createUser(newUserData)
 
-        return response.status(201).json({ success: true })
+            return response.status(201).json({ success: result })
+        } catch (error) {
+            next(error)
+        }
     }
 
     async login(request: Request, response: Response, next: NextFunction) {

@@ -1,5 +1,5 @@
 import dynamoose, { Schema } from 'dynamoose'
-import { Artist, ArtistSchema } from './artist.model'
+import ArtistModel, { Artist } from './artist.model'
 import { Item } from 'dynamoose/dist/Item'
 
 export class MusicTrack extends Item {
@@ -30,7 +30,7 @@ export const MusicTrackSchema = new Schema({
     },
     artist: {
         type: Set,
-        schema: [ArtistSchema],
+        schema: [ArtistModel],
         required: true
     },
     genre: {
