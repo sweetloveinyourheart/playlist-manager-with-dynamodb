@@ -37,3 +37,15 @@ export class CreateNewUserDTO {
     gender?: Gender
     
 }
+
+export class UserLoginDTO {
+    constructor(data: Partial<UserLoginDTO>) {
+        Object.assign(this, data)
+    }
+
+    @IsString()
+    username!: string
+
+    @IsString()
+    password!: string
+}
