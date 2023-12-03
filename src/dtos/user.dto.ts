@@ -95,3 +95,48 @@ export class UserLoginDTO {
     @IsString()
     password!: string
 }
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UpdateUserDTO:
+ *       type: object
+ *       properties:
+ *         first_name:
+ *           type: string
+ *           description: User's first name
+ *         last_name:
+ *           type: string
+ *           description: User's last name
+ *         address:
+ *           type: string
+ *           description: User's address
+ *         gender:
+ *           type: string
+ *           description: User's gender
+ */    
+export class UpdateUserDTO {
+    constructor(data: Partial<UpdateUserDTO>) {
+        Object.assign(this, data)
+    }
+
+    @IsOptional()
+    @IsString()
+    @Length(3, 50)
+    first_name?: string
+
+    @IsOptional()
+    @IsString()
+    @Length(3, 50)
+    last_name?: string
+
+    @IsOptional()
+    @IsString()
+    address?: string
+
+    @IsOptional()
+    @IsEnum(Gender)
+    gender?: Gender
+    
+}

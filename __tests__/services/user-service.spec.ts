@@ -152,7 +152,10 @@ describe('UserService', () => {
             const mockSign = jest.fn().mockReturnValue('mockedtoken');
             jwt.sign = mockSign
 
-            const result = await userService.refreshNewToken(mockAuthUser);
+            const mockDecode = jest.fn().mockReturnValue(mockAuthUser)
+            jwt.decode = mockDecode
+
+            const result = await userService.refreshNewToken('refresh-token');
 
             expect(mockSign).toHaveBeenCalledWith(
                 mockAuthUser,
@@ -160,13 +163,15 @@ describe('UserService', () => {
                 { expiresIn: '15m' }
             );
             expect(result).toEqual({
-                accessToken: 'mockedtoken',
-                refreshToken: 'mockedtoken', // Adjust this if needed
+                accessToken: 'mockedtoken'
             });
         });
 
         test('should throw UnauthorizedException when authUser is not provided', async () => {
-            await expect(userService.refreshNewToken()).rejects.toThrowError(UnauthorizedException);
+            const mockDecode = jest.fn().mockReturnValue(null)
+            jwt.decode = mockDecode
+
+            await expect(userService.refreshNewToken('refresh-token')).rejects.toThrowError(UnauthorizedException);
         });
     })
 
@@ -183,8 +188,34 @@ describe('UserService', () => {
             expect(result).toEqual(mockUser);
         });
 
-        test('should throw UnauthorizedException when user_id is not provided', async () => {
-            await expect(userService.getUserProfile()).rejects.toThrowError(UnauthorizedException);
+        test('should throw NotFoundException when user is not found', async () => {
+            const mockUserId = 'nonexistentuserid';
+            const mockGet = jest.fn().mockResolvedValue(undefined);
+            UserModel.get = mockGet;
+
+            await expect(userService.getUserProfile(mockUserId)).rejects.toThrowError(NotFoundException);
+
+            // Ensure get was called with the correct parameters
+            expect(mockGet).toHaveBeenCalledWith(mockUserId);
+        });
+    })
+
+    describe('updateUserProfile', () => {
+        const mockUpdateData = { first_name: 'name' }
+
+        test('should return user when update user profile successfully', async () => {
+            const mockUserId = 'mockuserid';
+            const mockUser = { user_id: mockUserId, email: 'mockuser' };
+            const mockGet = jest.fn().mockResolvedValue(mockUser);
+            UserModel.get = mockGet;
+
+            const mockUpdate = jest.fn().mockResolvedValue(mockUpdateData);
+            UserModel.update = mockUpdate
+
+            const result = await userService.updateUserProfile(mockUserId, mockUpdateData);
+
+            expect(mockGet).toHaveBeenCalledWith(mockUserId);
+            expect(result).toEqual(mockUpdateData);
         });
 
         test('should throw NotFoundException when user is not found', async () => {
@@ -192,7 +223,7 @@ describe('UserService', () => {
             const mockGet = jest.fn().mockResolvedValue(undefined);
             UserModel.get = mockGet;
 
-            await expect(userService.getUserProfile(mockUserId)).rejects.toThrowError(NotFoundException);
+            await expect(userService.updateUserProfile(mockUserId, mockUpdateData)).rejects.toThrowError(NotFoundException);
 
             // Ensure get was called with the correct parameters
             expect(mockGet).toHaveBeenCalledWith(mockUserId);

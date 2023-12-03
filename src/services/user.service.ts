@@ -1,4 +1,4 @@
-import { CreateNewUserDTO, UserLoginDTO } from "../dtos/user.dto";
+import { CreateNewUserDTO, UpdateUserDTO, UserLoginDTO } from "../dtos/user.dto";
 import * as bcrypt from 'bcrypt'
 import UserModel from "../models/user.model";
 import { v4 as uuidv4 } from 'uuid';
@@ -52,9 +52,7 @@ export default class UserService {
         return { accessToken, refreshToken }
     }
 
-    async refreshNewToken(refreshToken?: string) {
-        if (!refreshToken) throw new UnauthorizedException()
-
+    async refreshNewToken(refreshToken: string) {
         const decodedPayload = jwt.decode(refreshToken)
         if (!decodedPayload) throw new UnauthorizedException()
 
@@ -65,12 +63,18 @@ export default class UserService {
         return { accessToken }
     }
 
-    async getUserProfile(user_id?: string) {
-        if (!user_id) throw new UnauthorizedException()
-
+    async getUserProfile(user_id: string) {
         const user = await UserModel.get(user_id)
         if (!user) throw new NotFoundException('No profile found !')
 
         return user
+    }
+
+    async updateUserProfile(user_id: string, updateData: UpdateUserDTO) {
+        const user = await UserModel.get(user_id)
+        if (!user) throw new NotFoundException('No profile found !')
+
+        const updatedUser = await UserModel.update(user_id, updateData)
+        return updatedUser
     }
 }

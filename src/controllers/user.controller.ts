@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { ValidateBody } from "../decorators/validate-body.decorator";
-import { CreateNewUserDTO, UserLoginDTO } from "../dtos/user.dto";
+import { CreateNewUserDTO, UpdateUserDTO, UserLoginDTO } from "../dtos/user.dto";
 import UserService from "../services/user.service";
 import { AuthGuard } from "../decorators/auth-guard.decorator";
+import { UnauthorizedException } from "../exceptions/unauthorized.exception";
 
 const userService = new UserService()
 
@@ -35,19 +36,39 @@ export default class UserController {
     async refreshToken(request: Request, response: Response, next: NextFunction) {
         try {
             const refreshToken = request.query['refresh-token'] as string
+            if (!refreshToken) throw new UnauthorizedException()
+
             const data = await userService.refreshNewToken(refreshToken)
-            
+
             return response.status(200).json(data)
         } catch (error) {
             next(error)
-        }   
+        }
     }
 
     @AuthGuard()
     async getUserProfile(request: Request, response: Response, next: NextFunction) {
         try {
             const user = request.user
-            const profile = await userService.getUserProfile(user?.user_id)
+            if (!user) throw new UnauthorizedException()
+
+            const profile = await userService.getUserProfile(user.user_id)
+
+            return response.status(200).json(profile)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    @AuthGuard()
+    async updateUserProfile(request: Request, response: Response, next: NextFunction) {
+        try {
+            const user = request.user
+            if (!user) throw new UnauthorizedException()
+
+            const updateData: UpdateUserDTO = request.body
+
+            const profile = await userService.updateUserProfile(user.user_id, updateData)
 
             return response.status(200).json(profile)
         } catch (error) {

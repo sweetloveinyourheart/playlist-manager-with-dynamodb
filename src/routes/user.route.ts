@@ -61,29 +61,6 @@ routes.post('/sign-in', userController.login)
 
 /**
  * @swagger
- * /user/profile:
- *   get:
- *     summary: Sign in a user
- *     security:
- *       - BearerAuth: []
- *     tags:
- *       - User
- *     responses:
- *       200:
- *         description: User info
- *         content:
- *           application/json:
- *             schema:
- *              $ref: '#/components/schemas/User'
- *       401:
- *         description: Unauthorized, incorrect credentials
- *       500:
- *         description: Internal Server Error
- */
-routes.get('/profile', userController.getUserProfile)
-
-/**
- * @swagger
  * /user/refresh-token:
  *   get:
  *     summary: Refresh new token
@@ -107,5 +84,56 @@ routes.get('/profile', userController.getUserProfile)
  *         description: Internal Server Error
  */
 routes.get('/refresh-token', userController.refreshToken)
+
+/**
+ * @swagger
+ * /user/profile:
+ *   get:
+ *     summary: Get user profile
+ *     security:
+ *       - BearerAuth: []
+ *     tags:
+ *       - User
+ *     responses:
+ *       200:
+ *         description: User info
+ *         content:
+ *           application/json:
+ *             schema:
+ *              $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized, incorrect credentials
+ *       500:
+ *         description: Internal Server Error
+ */
+routes.get('/profile', userController.getUserProfile)
+
+
+/**
+ * @swagger
+ * /user/update-profile:
+ *   put:
+ *     summary: Update user' profile
+ *     security:
+ *       - BearerAuth: []
+ *     tags:
+ *       - User
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateUserDTO'
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *       400:
+ *         description: Bad request, invalid input
+ *       401:
+ *         description: Unauthorized, incorrect credentials
+ *       500:
+ *         description: Internal Server Error
+ */
+routes.put('/update-profile', userController.updateUserProfile)
 
 export default routes
