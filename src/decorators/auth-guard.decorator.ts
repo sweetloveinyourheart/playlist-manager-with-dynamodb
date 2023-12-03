@@ -15,6 +15,12 @@ declare global {
     }
 }
 
+/**
+ * Decorator factory for implementing a basic authentication guard for an Express.js route handler method.
+ * Verifies the presence and validity of a JWT (JSON Web Token) in the request headers.
+ *
+ * @returns A decorator function to be used on an Express route handler method.
+ */
 export function AuthGuard() {
     return (target: any, memberName: string, propertyDescriptor: PropertyDescriptor) => {
         const originalMethod = propertyDescriptor.value;
