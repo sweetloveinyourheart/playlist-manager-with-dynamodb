@@ -53,10 +53,10 @@ export default class UserService {
     }
 
     async refreshNewToken(refreshToken: string) {
-        const decodedPayload = jwt.decode(refreshToken)
+        const decodedPayload = jwt.decode(refreshToken) as any
         if (!decodedPayload) throw new UnauthorizedException()
 
-        const jwtPayload = decodedPayload
+        const jwtPayload = { email: decodedPayload.email, user_id: decodedPayload.user_id  }
 
         const accessToken = jwt.sign(jwtPayload, JWT_SECRET, { expiresIn: '15m' })
 
