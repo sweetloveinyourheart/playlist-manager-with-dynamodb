@@ -33,6 +33,18 @@ export default class UserController {
     }
 
     @AuthGuard()
+    async refreshToken(request: Request, response: Response, next: NextFunction) {
+        try {
+            const user = request.user
+            const data = await userService.refreshNewToken(user)
+            
+            return response.status(200).json(data)
+        } catch (error) {
+            next(error)
+        }   
+    }
+
+    @AuthGuard()
     async getUserProfile(request: Request, response: Response, next: NextFunction) {
         try {
             const user = request.user

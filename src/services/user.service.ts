@@ -8,6 +8,7 @@ import { UnauthorizedException } from "../exceptions/unauthorized.exception";
 import * as jwt from 'jsonwebtoken'
 import { JWT_SECRET } from "../configs/variables.config";
 import { NotFoundException } from "../exceptions/not-found.exception";
+import { AuthenticatedUser } from "../decorators/auth-guard.decorator";
 
 export default class UserService {
 
@@ -35,15 +36,26 @@ export default class UserService {
     }
 
     async userLogin(userLogin: UserLoginDTO) {
-        const accounts = await AccountModel.query({ username: userLogin.username }).exec()
-        if (accounts.length === 0) throw new UnauthorizedException('Username or password is not valid !')
-        
-        const account = accounts[0]
+        const account = await AccountModel.get(userLogin.username)
+        if (!account) throw new UnauthorizedException('Username or password is not valid !')
+
+        // const account = accounts[0]
         const isValidPassword = await bcrypt.compare(userLogin.password, account.password)
-        if(!isValidPassword) throw new UnauthorizedException('Username or password is not valid !')
-        
-        const accountWithUser = await account.populate() as Account 
-        const jwtPayload = { username: account.username, user_id: accountWithUser.user.user_id  }
+        if (!isValidPassword) throw new UnauthorizedException('Username or password is not valid !')
+
+        const accountWithUser = await account.populate() as Account
+        const jwtPayload = { username: account.username, user_id: accountWithUser.user.user_id }
+
+        const accessToken = jwt.sign(jwtPayload, JWT_SECRET, { expiresIn: '15m' })
+        const refreshToken = jwt.sign(jwtPayload, JWT_SECRET, { expiresIn: '7d' })
+
+        return { accessToken, refreshToken }
+    }
+
+    async refreshNewToken(authUser?: AuthenticatedUser) {
+        if (!authUser) throw new UnauthorizedException()
+
+        const jwtPayload = authUser
 
         const accessToken = jwt.sign(jwtPayload, JWT_SECRET, { expiresIn: '15m' })
         const refreshToken = jwt.sign(jwtPayload, JWT_SECRET, { expiresIn: '7d' })
@@ -52,10 +64,10 @@ export default class UserService {
     }
 
     async getUserProfile(user_id?: string) {
-        if(!user_id) throw new BadRequestException('No user_id given !')
+        if (!user_id) throw new UnauthorizedException()
 
         const user = await UserModel.get(user_id)
-        if(!user) throw new NotFoundException('No profile found !')
+        if (!user) throw new NotFoundException('No profile found !')
 
         return user
     }

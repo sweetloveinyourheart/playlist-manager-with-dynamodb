@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import * as jwt from 'jsonwebtoken'
 import { JWT_SECRET } from "../configs/variables.config";
 
-interface AuthenticatedUser {
+export interface AuthenticatedUser {
     username: string
     user_id: string
 }
