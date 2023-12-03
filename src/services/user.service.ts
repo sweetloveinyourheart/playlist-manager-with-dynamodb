@@ -52,15 +52,17 @@ export default class UserService {
         return { accessToken, refreshToken }
     }
 
-    async refreshNewToken(authUser?: AuthenticatedUser) {
-        if (!authUser) throw new UnauthorizedException()
+    async refreshNewToken(refreshToken?: string) {
+        if (!refreshToken) throw new UnauthorizedException()
 
-        const jwtPayload = authUser
+        const decodedPayload = jwt.decode(refreshToken)
+        if (!decodedPayload) throw new UnauthorizedException()
+
+        const jwtPayload = decodedPayload
 
         const accessToken = jwt.sign(jwtPayload, JWT_SECRET, { expiresIn: '15m' })
-        const refreshToken = jwt.sign(jwtPayload, JWT_SECRET, { expiresIn: '7d' })
 
-        return { accessToken, refreshToken }
+        return { accessToken }
     }
 
     async getUserProfile(user_id?: string) {

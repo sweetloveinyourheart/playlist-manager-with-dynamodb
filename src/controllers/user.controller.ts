@@ -32,11 +32,10 @@ export default class UserController {
         }
     }
 
-    @AuthGuard()
     async refreshToken(request: Request, response: Response, next: NextFunction) {
         try {
-            const user = request.user
-            const data = await userService.refreshNewToken(user)
+            const refreshToken = request.query['refresh-token'] as string
+            const data = await userService.refreshNewToken(refreshToken)
             
             return response.status(200).json(data)
         } catch (error) {

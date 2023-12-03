@@ -8,6 +8,34 @@ import {
 
 import { Gender } from '../models/user.model';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CreateNewUserDTO:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           required: true
+ *           format: email
+ *           description: User's email
+ *         password:
+ *           type: string
+ *           description: User's password
+ *         first_name:
+ *           type: string
+ *           description: User's first name
+ *         last_name:
+ *           type: string
+ *           description: User's last name
+ *         address:
+ *           type: string
+ *           description: User's address
+ *         gender:
+ *           type: string
+ *           description: User's gender
+ */    
 export class CreateNewUserDTO {
     constructor(data: Partial<CreateNewUserDTO>) {
         Object.assign(this, data)
@@ -38,6 +66,24 @@ export class CreateNewUserDTO {
     
 }
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UserLoginDTO:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: The email address of the user.
+ *         password:
+ *           type: string
+ *           description: The password of the user.
+ */
 export class UserLoginDTO {
     constructor(data: Partial<UserLoginDTO>) {
         Object.assign(this, data)
