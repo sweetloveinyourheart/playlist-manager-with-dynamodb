@@ -13,9 +13,9 @@ import { AuthenticatedUser } from "../decorators/auth-guard.decorator";
 export default class UserService {
 
     async createUser(newUserData: CreateNewUserDTO) {
-        const { username, password, ...userData } = newUserData
+        const { email, password, ...userData } = newUserData
 
-        const existedAccounts = await AccountModel.query({ username }).exec()
+        const existedAccounts = await AccountModel.query({ email }).exec()
         if (existedAccounts.length > 0) throw new BadRequestException('User already exist !')
 
         const salt = await bcrypt.genSalt(10)
@@ -27,7 +27,7 @@ export default class UserService {
         })
 
         const newAccount = await AccountModel.create({
-            username,
+            email,
             password: hashedPassword,
             user: newUser
         })
@@ -36,15 +36,15 @@ export default class UserService {
     }
 
     async userLogin(userLogin: UserLoginDTO) {
-        const account = await AccountModel.get(userLogin.username)
-        if (!account) throw new UnauthorizedException('Username or password is not valid !')
+        const account = await AccountModel.get(userLogin.email)
+        if (!account) throw new UnauthorizedException('Email or password is not valid !')
 
         // const account = accounts[0]
         const isValidPassword = await bcrypt.compare(userLogin.password, account.password)
-        if (!isValidPassword) throw new UnauthorizedException('Username or password is not valid !')
+        if (!isValidPassword) throw new UnauthorizedException('Email or password is not valid !')
 
         const accountWithUser = await account.populate() as Account
-        const jwtPayload = { username: account.username, user_id: accountWithUser.user.user_id }
+        const jwtPayload = { email: account.email, user_id: accountWithUser.user.user_id }
 
         const accessToken = jwt.sign(jwtPayload, JWT_SECRET, { expiresIn: '15m' })
         const refreshToken = jwt.sign(jwtPayload, JWT_SECRET, { expiresIn: '7d' })

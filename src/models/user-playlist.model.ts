@@ -1,6 +1,6 @@
 import dynamoose, { Schema } from "dynamoose";
-import UserModel, { User, UserSchema } from "./user.model";
-import MusicTrackModel, { MusicTrack, MusicTrackSchema } from "./music-track.model";
+import UserModel, { User } from "./user.model";
+import MusicTrackModel, { MusicTrack } from "./music-track.model";
 import { Item } from "dynamoose/dist/Item";
 
 export class UserPlaylist extends Item {
@@ -40,4 +40,4 @@ export const UserPlaylistSchema = new Schema({
 })
 
 const UserPlaylistModel = dynamoose.model<UserPlaylist>('user-playlist', UserPlaylistSchema)
-export default UserPlaylist
+export default UserPlaylistModel

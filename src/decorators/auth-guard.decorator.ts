@@ -3,7 +3,7 @@ import * as jwt from 'jsonwebtoken'
 import { JWT_SECRET } from "../configs/variables.config";
 
 export interface AuthenticatedUser {
-    username: string
+    email: string
     user_id: string
 }
 

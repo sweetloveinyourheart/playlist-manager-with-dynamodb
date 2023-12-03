@@ -2,7 +2,8 @@ import {
     IsString,
     IsEnum,
     IsOptional,
-    Length
+    Length,
+    IsEmail
 } from 'class-validator';
 
 import { Gender } from '../models/user.model';
@@ -12,9 +13,8 @@ export class CreateNewUserDTO {
         Object.assign(this, data)
     }
 
-    @IsString()
-    @Length(3, 50)
-    username!: string
+    @IsEmail()
+    email!: string
 
     @IsString()
     @Length(6, 50)
@@ -44,7 +44,7 @@ export class UserLoginDTO {
     }
 
     @IsString()
-    username!: string
+    email!: string
 
     @IsString()
     password!: string

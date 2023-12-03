@@ -23,7 +23,7 @@ describe('UserService', () => {
 
     describe('createUser', () => {
         const mockNewUserData: CreateNewUserDTO = {
-            username: 'testuser',
+            email: 'testuser@gmail.com',
             password: 'testpassword',
             first_name: 'first',
             last_name: 'last'
@@ -35,7 +35,7 @@ describe('UserService', () => {
             const mockSalt = 'mockSalt';
             const mockHashedPassword = 'mockHashedPassword';
             const mockNewUser = { user_id: 'mockUserId' };
-            const mockNewAccount = { username: 'testuser', password: 'mockHashedPassword', user: mockNewUser };
+            const mockNewAccount = { email: 'testuser', password: 'mockHashedPassword', user: mockNewUser };
 
             jest.spyOn(AccountModel, 'query').mockReturnValue({
                 exec: jest.fn().mockResolvedValue(mockExistedAccounts)
@@ -55,16 +55,16 @@ describe('UserService', () => {
 
             const result = await userService.createUser(mockNewUserData);
 
-            expect(AccountModel.query).toHaveBeenCalledWith({ username: 'testuser' });
+            expect(AccountModel.query).toHaveBeenCalledWith({ email: 'testuser@gmail.com' });
             expect(bcrypt.genSalt).toHaveBeenCalledWith(10);
             expect(bcrypt.hash).toHaveBeenCalledWith('testpassword', mockSalt);
             expect(UserModel.create).toHaveBeenCalledWith({ user_id: expect.any(String), first_name: mockNewUserData.first_name, last_name: mockNewUserData.last_name });
-            expect(AccountModel.create).toHaveBeenCalledWith({ username: 'testuser', password: mockHashedPassword, user: mockNewUser });
+            expect(AccountModel.create).toHaveBeenCalledWith({ email: 'testuser@gmail.com', password: mockHashedPassword, user: mockNewUser });
             expect(result).toEqual(true);
         });
 
         test('should throw BadRequestException if user already exists', async () => {
-            const mockExistedAccounts = [{ username: 'existinguser', user: "abc" }];
+            const mockExistedAccounts = [{ email: 'existinguser@gmail.com', user: "abc" }];
 
             const mockQuery = jest.fn().mockReturnValue({
                 exec: jest.fn().mockResolvedValue(mockExistedAccounts)
@@ -78,12 +78,12 @@ describe('UserService', () => {
     describe('userLogin', () => {
         test('should generate tokens and return them on successful login', async () => {
             const userLogin = {
-                username: 'existinguser',
+                email: 'existinguser@gmail.com',
                 password: 'validpassword',
             };
 
             const mockAccount = {
-                username: 'existinguser',
+                email: 'existinguser@gmail.com',
                 password: '$2b$10$mockhash', // Mocked hashed password
                 user: {
                     user_id: 'mockuserid',
@@ -106,7 +106,7 @@ describe('UserService', () => {
 
             const result = await userService.userLogin(userLogin);
 
-            expect(mockQuery).toHaveBeenCalledWith(userLogin.username);
+            expect(mockQuery).toHaveBeenCalledWith(userLogin.email);
             expect(mockCompare).toHaveBeenCalledWith(userLogin.password, mockAccount.password);
             expect(result).toEqual({
                 accessToken: 'mockedtoken',
@@ -115,14 +115,14 @@ describe('UserService', () => {
 
         });
 
-        test('should throw UnauthorizedException if username or password is not valid', async () => {
+        test('should throw UnauthorizedException if email or password is not valid', async () => {
             const userLogin = {
-                username: 'existinguser',
+                email: 'existinguser@gmail.com',
                 password: 'validpassword',
             };
 
             const mockAccount = {
-                username: 'existinguser',
+                email: 'existinguser@gmail.com',
                 password: '$2b$10$mockhash', // Mocked hashed password
                 user: {
                     user_id: 'mockuserid',
@@ -148,7 +148,7 @@ describe('UserService', () => {
 
     describe('refreshToken', () => {
         test('should generate tokens with provided authUser', async () => {
-            const mockAuthUser = { user_id: 'mockuserid', username: 'mockuser' };
+            const mockAuthUser = { user_id: 'mockuserid', email: 'mockuser@gmail.com' };
             const mockSign = jest.fn().mockReturnValue('mockedtoken');
             jwt.sign = mockSign
 
@@ -173,7 +173,7 @@ describe('UserService', () => {
     describe('getUserProfile', () => {
         test('should return user with the provided user_id', async () => {
             const mockUserId = 'mockuserid';
-            const mockUser = { user_id: mockUserId, username: 'mockuser' };
+            const mockUser = { user_id: mockUserId, email: 'mockuser' };
             const mockGet = jest.fn().mockResolvedValue(mockUser);
             UserModel.get = mockGet;
 

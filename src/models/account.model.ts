@@ -2,8 +2,14 @@ import dynamoose, { Schema } from "dynamoose";
 import { Item } from "dynamoose/dist/Item";
 import UserModel, { User } from "./user.model";
 
+enum Role {
+    Admin = "admin",
+    Artist = "artist",
+    User = "user"
+}
+
 export class Account extends Item {
-    username!: string
+    email!: string
     password!: string
     user!: User
     created_at!: string
@@ -11,7 +17,7 @@ export class Account extends Item {
 }
 
 export const AccountSchema = new Schema({
-    username: {
+    email: {
         type: String,
         hashKey: true,
         required: true
@@ -24,6 +30,11 @@ export const AccountSchema = new Schema({
         type: UserModel,
         schema: UserModel,
         required: true
+    },
+    role: {
+        type: String,
+        enum: Object.values(Role),
+        default: Role.User  
     }
 }, {
     timestamps: {

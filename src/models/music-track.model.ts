@@ -8,8 +8,8 @@ export class MusicTrack extends Item {
     artist!: Artist
     genre!: PlaylistGenre
     release_date!: Date
-    duration?: number
-    url?: string
+    duration!: number
+    url!: string
 }
 
 enum PlaylistGenre {
@@ -43,10 +43,12 @@ export const MusicTrackSchema = new Schema({
         required: true
     }, 
     duration: {
-        type: Number
+        type: Number,
+        default: 0
     },
     url: {
-        type: String
+        type: String,
+        required: true
     }
 }, {
     timestamps: {
