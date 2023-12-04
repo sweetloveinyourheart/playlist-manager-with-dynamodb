@@ -40,6 +40,7 @@ export const MusicTrackSchema = new Schema({
     },
     release_date: {
         type: Date,
+        rangeKey: true,
         required: true
     }, 
     duration: {

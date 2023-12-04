@@ -8,7 +8,6 @@ import { UnauthorizedException } from "../exceptions/unauthorized.exception";
 import * as jwt from 'jsonwebtoken'
 import { JWT_SECRET } from "../configs/variables.config";
 import { NotFoundException } from "../exceptions/not-found.exception";
-import { AuthenticatedUser } from "../decorators/auth-guard.decorator";
 
 export default class UserService {
 
