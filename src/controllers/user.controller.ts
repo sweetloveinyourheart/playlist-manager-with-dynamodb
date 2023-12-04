@@ -61,6 +61,7 @@ export default class UserController {
     }
 
     @AuthGuard()
+    @ValidateBody(UpdateUserDTO)
     async updateUserProfile(request: Request, response: Response, next: NextFunction) {
         try {
             const user = request.user

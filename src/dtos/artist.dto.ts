@@ -18,8 +18,8 @@ export class ArtistRegisterDTO {
     genre?: ArtistGenre
 }
 
-export class EditRegisterDTO {
-    constructor(data: Partial<ArtistRegisterDTO>) {
+export class EditArtistDTO {
+    constructor(data: Partial<EditArtistDTO>) {
         Object.assign(this, data)
     }
 

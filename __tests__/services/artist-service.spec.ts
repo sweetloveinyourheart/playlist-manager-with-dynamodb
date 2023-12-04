@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 import ArtistService from '../../src/services/artist.service'
 import ArtistModel from '../../src/models/artist.model';
-import { ArtistRegisterDTO, EditRegisterDTO } from '../../src/dtos/artist.dto';
+import { ArtistRegisterDTO, EditArtistDTO } from '../../src/dtos/artist.dto';
 import { NotFoundException } from '../../src/exceptions/not-found.exception';
 
 describe('ArtistService', () => {
@@ -34,7 +34,7 @@ describe('ArtistService', () => {
     describe('editArtistInfo', () => {
         it('should throw error when no artist found with given id', async () => {
             const artist_id = "id"
-            const artist: EditRegisterDTO = {
+            const artist: EditArtistDTO = {
                 artist_name: "artist"
             }
 
@@ -46,7 +46,7 @@ describe('ArtistService', () => {
 
         it('should throw error when no artist found with given id', async () => {
             const artist_id = "id"
-            const artist: EditRegisterDTO = {
+            const artist: EditArtistDTO = {
                 artist_name: "artist"
             }
 

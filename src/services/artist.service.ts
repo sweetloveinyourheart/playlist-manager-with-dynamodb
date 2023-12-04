@@ -1,4 +1,4 @@
-import { ArtistRegisterDTO, EditRegisterDTO } from "../dtos/artist.dto";
+import { ArtistRegisterDTO, EditArtistDTO } from "../dtos/artist.dto";
 import { NotFoundException } from "../exceptions/not-found.exception";
 import ArtistModel from "../models/artist.model";
 
@@ -9,7 +9,7 @@ export default class ArtistService {
         return newArtist
     }
 
-    async editArtistInfo(artist_id: string, artistInfo: EditRegisterDTO) {
+    async editArtistInfo(artist_id: string, artistInfo: EditArtistDTO) {
         const artist = await ArtistModel.get(artist_id)
         if (!artist) throw new NotFoundException('No artist found !')
 
