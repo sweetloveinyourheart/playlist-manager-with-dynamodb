@@ -26,7 +26,7 @@ describe('ArtistService', () => {
 
             const result = await artistService.artistRegister(artist)
 
-            expect(ArtistModel.create).toHaveBeenCalledWith(artist)
+            expect(ArtistModel.create).toHaveBeenCalledWith({ ...artist, artist_id: expect.any(String) })
             expect(result).toBe(artist)
         })
     })
@@ -56,9 +56,9 @@ describe('ArtistService', () => {
             const mockArtistUpdate = jest.fn().mockResolvedValue(artist)
             ArtistModel.update = mockArtistUpdate
 
-           const result = await artistService.editArtistInfo(artist_id, artist)
+            const result = await artistService.editArtistInfo(artist_id, artist)
 
-           expect(result).toBe(artist)
+            expect(result).toBe(artist)
         })
     })
 })
