@@ -69,6 +69,13 @@ export default class UserService {
         return user
     }
 
+    async getUserAccountByEmail(email: string) {
+        const account = await AccountModel.get(email)
+        if(!account) throw new NotFoundException("No account found")
+
+        return account
+    }
+
     async updateUserProfile(user_id: string, updateData: UpdateUserDTO) {
         const user = await UserModel.get(user_id)
         if (!user) throw new NotFoundException('No profile found !')

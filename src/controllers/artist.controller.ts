@@ -3,12 +3,15 @@ import { ValidateBody } from "../decorators/validate-body.decorator";
 import { ArtistRegisterDTO, EditArtistDTO } from "../dtos/artist.dto";
 import ArtistService from "../services/artist.service";
 import { AuthGuard } from "../decorators/auth-guard.decorator";
+import { RolesGuard } from "../decorators/role-guard.decorator";
+import { Role } from "../models/account.model";
 
 const artistService = new ArtistService()
 
 export default class ArtistController {
 
     @AuthGuard()
+    @RolesGuard(Role.Admin)
     @ValidateBody(ArtistRegisterDTO)
     async registerNewArtist(request: Request, response: Response, next: NextFunction) {
         try {
@@ -22,8 +25,9 @@ export default class ArtistController {
     }
 
     @AuthGuard()
+    @RolesGuard(Role.Admin)
     @ValidateBody(EditArtistDTO)
-    async updateUserProfile(request: Request, response: Response, next: NextFunction) {
+    async updateArtistInfo(request: Request, response: Response, next: NextFunction) {
         try {
             const artist_id = request.query['artist_id'] as string
             const updateData: EditArtistDTO = request.body

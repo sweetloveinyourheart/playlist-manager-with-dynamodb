@@ -1,11 +1,16 @@
 import { ArtistRegisterDTO, EditArtistDTO } from "../dtos/artist.dto";
 import { NotFoundException } from "../exceptions/not-found.exception";
 import ArtistModel from "../models/artist.model";
+import { v4 as uuidv4 } from 'uuid'
 
 export default class ArtistService {
 
     async artistRegister(artistInfo: ArtistRegisterDTO) {
-        const newArtist = await ArtistModel.create(artistInfo)
+        const newArtist = await ArtistModel.create({
+            ...artistInfo,
+            artist_id: uuidv4()
+        })
+        
         return newArtist
     }
 

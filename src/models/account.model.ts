@@ -2,9 +2,9 @@ import dynamoose, { Schema } from "dynamoose";
 import { Item } from "dynamoose/dist/Item";
 import UserModel, { User } from "./user.model";
 
-enum Role {
+export enum Role {
     Admin = "admin",
-    Artist = "artist",
+    Manager = "manager",
     User = "user"
 }
 
@@ -12,6 +12,7 @@ export class Account extends Item {
     email!: string
     password!: string
     user!: User
+    role!: Role
     created_at!: string
     updated_at!: string
 }
