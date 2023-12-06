@@ -38,6 +38,9 @@ export default class MusicTrackController {
         }
     }
 
+    @AuthGuard()
+    @RolesGuard(Role.Admin)
+    @ValidateBody(EditMusicTrackDTO)
     async removeMusicTrack(request: Request, response: Response, next: NextFunction) {
         try {
             const track_id = request.query['track_id'] as string
