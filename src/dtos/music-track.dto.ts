@@ -1,4 +1,4 @@
-import { IsArray, IsDataURI, IsDateString, IsEnum, IsNumber, IsOptional, IsString } from "class-validator"
+import { IsArray, IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUrl } from "class-validator"
 import { PlaylistGenre } from "../models/music-track.model"
 
 /**
@@ -51,12 +51,12 @@ export class NewMusicTrackDTO {
     genre!: PlaylistGenre
 
     @IsDateString()
-    release_date!: Date
+    release_date!: String
 
     @IsNumber()
     duration!: number
 
-    @IsDataURI()
+    @IsUrl()
     url!: string
 }
 
@@ -106,21 +106,21 @@ export class EditMusicTrackDTO {
 
     @IsOptional()
     @IsArray()
-    artists!: string[]
+    artists?: string[]
 
     @IsOptional()
     @IsEnum(PlaylistGenre)
-    genre!: PlaylistGenre
+    genre?: PlaylistGenre
 
     @IsOptional()
     @IsDateString()
-    release_date!: Date
+    release_date?: String
 
     @IsOptional()
     @IsNumber()
-    duration!: number
+    duration?: number
 
     @IsOptional()
-    @IsDataURI()
-    url!: string
+    @IsUrl()
+    url?: string
 }

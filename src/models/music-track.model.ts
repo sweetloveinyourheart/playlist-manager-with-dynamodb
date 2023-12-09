@@ -44,9 +44,9 @@ import { Item } from 'dynamoose/dist/Item'
 export class MusicTrack extends Item {
     track_id!: string
     track_title!: string
-    artist!: Artist
+    artists!: Artist[] | string[]
     genre!: PlaylistGenre
-    release_date!: Date
+    release_date!: String
     duration!: number
     url!: string
 }
@@ -61,14 +61,18 @@ export enum PlaylistGenre {
 export const MusicTrackSchema = new Schema({
     track_id: {
         type: String,
-        hashKey: true
+        hashKey: true,
+        index: {
+            name: 'idx_release_date',
+            rangeKey: 'release_date'
+        }
     },
     track_title: {
         type: String,
         required: true
     },
-    artist: {
-        type: Set,
+    artists: {
+        type: Array,
         schema: [ArtistModel],
         required: true
     },
@@ -78,8 +82,7 @@ export const MusicTrackSchema = new Schema({
         required: true
     },
     release_date: {
-        type: Date,
-        rangeKey: true,
+        type: String,
         required: true
     }, 
     duration: {

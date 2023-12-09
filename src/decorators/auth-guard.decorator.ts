@@ -31,12 +31,13 @@ export function AuthGuard() {
 
             if (token == null) return res.sendStatus(401)
 
-            jwt.verify(token, JWT_SECRET, (err: any, user: any) => {
-                if (err) return res.sendStatus(403)
-
+            try {
+                const user = jwt.verify(token, JWT_SECRET) as any
                 req.user = user
-            })
-
+            } catch (error) {
+                return res.sendStatus(401)
+            }
+            
             return originalMethod.apply(this, arguments);
         }
 

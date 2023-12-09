@@ -45,7 +45,7 @@ export default class MusicTrackController {
         try {
             const track_id = request.query['track_id'] as string
             const result = await musicTrackService.removeMusicTrack(track_id)
-            return { success: result }
+            return response.status(200).json({ success: result })
         } catch (error) {
             next(error)
         }

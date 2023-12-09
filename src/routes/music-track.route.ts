@@ -15,14 +15,13 @@ const musicTrackController = new MusicTrackController()
  *     description: Endpoint to create a new music track.
  *     tags:
  *       - Music Tracks
- *     parameters:
- *       - name: body
- *         in: body
- *         required: true
- *         description: The JSON payload containing information about the new music track.
- *         schema:
- *           type: object
- *           $ref: '#/components/schemas/NewMusicTrackDTO'
+ *     requestBody:
+ *       description: Artist registration data
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewMusicTrackDTO'
  *     responses:
  *       200:
  *         description: Successfully created a new music track.
@@ -43,17 +42,17 @@ routes.post('/new', musicTrackController.createNewMusicTrack)
  *     parameters:
  *       - name: track_id
  *         in: query
- *         description: The refresh token to renew the user's session.
+ *         description: The music track id.
  *         required: true
  *         schema:
  *           type: string
- *       - name: body
- *         in: body
- *         required: true
- *         description: The JSON payload containing information to edit the music track.
- *         schema:
- *           type: object
- *           $ref: '#/components/schemas/EditMusicTrackDTO'
+ *     requestBody:
+ *       description: Artist registration data
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/EditMusicTrackDTO'
  *     responses:
  *       200:
  *         description: Successfully edited the music track.
@@ -62,7 +61,7 @@ routes.put('/edit', musicTrackController.editMusicTrack)
 
 /**
  * @swagger
- * music-track/remove:
+ * /music-track/remove:
  *   delete:
  *     summary: Remove a music track
  *     security:
@@ -83,4 +82,4 @@ routes.put('/edit', musicTrackController.editMusicTrack)
  */
 routes.delete('/remove', musicTrackController.removeMusicTrack)
 
-export default musicTrackController
+export default routes

@@ -5,7 +5,7 @@ import { Item } from "dynamoose/dist/Item";
 
 export class UserPlaylist extends Item {
     playlist_id!: string
-    user!: User
+    user!: User | string
     tracks!: MusicTrack
     playlist_name!: string
 }

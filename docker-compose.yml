@@ -8,6 +8,8 @@ services:
       AWS_REGION: "us-east-1"
       AWS_ACCESS_KEY_ID: local
       AWS_SECRET_ACCESS_KEY: local
+    volumes:
+      - dynamodb_data:/home/dynamodblocal/data
     ports:
       - 8000:8000
   
@@ -23,3 +25,6 @@ services:
       AWS_SECRET_ACCESS_KEY: local
     depends_on:
       - dynamodb-local
+
+volumes: 
+  dynamodb_data:

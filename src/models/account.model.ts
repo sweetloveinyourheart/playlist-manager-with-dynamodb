@@ -11,7 +11,7 @@ export enum Role {
 export class Account extends Item {
     email!: string
     password!: string
-    user!: User
+    user!: User | string
     role!: Role
     created_at!: string
     updated_at!: string

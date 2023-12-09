@@ -1,6 +1,6 @@
 import { CreateNewUserDTO, UpdateUserDTO, UserLoginDTO } from "../dtos/user.dto";
 import * as bcrypt from 'bcrypt'
-import UserModel from "../models/user.model";
+import UserModel, { User } from "../models/user.model";
 import { v4 as uuidv4 } from 'uuid';
 import AccountModel, { Account } from "../models/account.model";
 import { BadRequestException } from "../exceptions/bad-request.exception";
@@ -43,7 +43,10 @@ export default class UserService {
         if (!isValidPassword) throw new UnauthorizedException('Email or password is not valid !')
 
         const accountWithUser = await account.populate() as Account
-        const jwtPayload = { email: account.email, user_id: accountWithUser.user.user_id }
+        const jwtPayload = {
+            email: account.email,
+            user_id: (accountWithUser.user instanceof User) ? accountWithUser.user.user_id : accountWithUser.user
+        }
 
         const accessToken = jwt.sign(jwtPayload, JWT_SECRET, { expiresIn: '15m' })
         const refreshToken = jwt.sign(jwtPayload, JWT_SECRET, { expiresIn: '7d' })
@@ -55,7 +58,7 @@ export default class UserService {
         const decodedPayload = jwt.decode(refreshToken) as any
         if (!decodedPayload) throw new UnauthorizedException()
 
-        const jwtPayload = { email: decodedPayload.email, user_id: decodedPayload.user_id  }
+        const jwtPayload = { email: decodedPayload.email, user_id: decodedPayload.user_id }
 
         const accessToken = jwt.sign(jwtPayload, JWT_SECRET, { expiresIn: '15m' })
 
@@ -71,7 +74,7 @@ export default class UserService {
 
     async getUserAccountByEmail(email: string) {
         const account = await AccountModel.get(email)
-        if(!account) throw new NotFoundException("No account found")
+        if (!account) throw new NotFoundException("No account found")
 
         return account
     }
